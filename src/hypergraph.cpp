@@ -298,6 +298,7 @@ namespace agdmhs {
                 v = edge.find_next(v);
             }
             output_filestream << "\n";
+            break; // in this work I only need the very first line
         }
     };
 
