@@ -40,7 +40,7 @@ namespace agdmhs {
         bool count_only;
 
     public:
-        MMCSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false, unsigned sets_max);
+        MMCSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false, unsigned sets_max = 0);
         Hypergraph transversal (const Hypergraph& H) const override;
 
     private:
