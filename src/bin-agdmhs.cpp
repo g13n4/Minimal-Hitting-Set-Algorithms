@@ -48,6 +48,7 @@ int main (int argc, char * argv[]) {
         ("algorithm,a", po::value<std::string>()->default_value("pmmcs"), "Algorithm to use (pmmcs, prs, fka, berge, bm)")
         ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel. Supported by pmmcs, prs, and bm; ignored by other algorithms.")
         ("cutoff-size,c", po::value<int>()->default_value(0), "Maximum size set to return (0: no limit). Supported by pmmcs, prs, and berge; ignored by other algorithms.")
+        ("number,n", po::value<int>()->default_value(0), "Maximum number of sets to return (0: no limit). Supported by pmmcs; ignored by other algorithms.")
         ("count-only", po::bool_switch(), "If set, count MHSes but do not store them. Useful in cases where complete MHS set will not fit in memory. Supported by pmmcs and prs; ignored by other algorithms.");
 
     po::positional_options_description p;
@@ -63,6 +64,7 @@ int main (int argc, char * argv[]) {
 
     const size_t num_threads = (vm["num-threads"].as<int>());
     const size_t cutoff_size = (vm["cutoff-size"].as<int>());
+    const size_t sets_max = (vm["number"].as<int>());
 
     const bool count_only = vm["count-only"].as<bool>();
 
@@ -107,7 +109,7 @@ int main (int argc, char * argv[]) {
     } else if (algname == "fka") {
         mhs_algorithm = std::unique_ptr<agdmhs::MHSAlgorithm> (new agdmhs::FKAlgorithmA());
     } else if (algname == "mmcs" or algname == "pmmcs") {
-        mhs_algorithm = std::unique_ptr<agdmhs::MHSAlgorithm> (new agdmhs::MMCSAlgorithm(num_threads, cutoff_size, count_only));
+        mhs_algorithm = std::unique_ptr<agdmhs::MHSAlgorithm> (new agdmhs::MMCSAlgorithm(num_threads, cutoff_size, count_only, sets_max));
     } else if (algname == "rs" or algname == "prs") {
         mhs_algorithm = std::unique_ptr<agdmhs::MHSAlgorithm> (new agdmhs::RSAlgorithm(num_threads, cutoff_size, count_only));
     } else {

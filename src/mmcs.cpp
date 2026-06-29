@@ -30,12 +30,14 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
 
-// TODO: Input specifications with <cassert>
 namespace agdmhs {
-    MMCSAlgorithm::MMCSAlgorithm (unsigned num_threads,
-                                  unsigned cutoff_size,
-                                  bool count_only):
-        num_threads(num_threads), cutoff_size(cutoff_size), count_only(count_only)
+    MMCSAlgorithm::MMCSAlgorithm (
+        unsigned num_threads,
+        unsigned cutoff_size,
+        bool count_only,
+        unsigned sets_max
+    ):
+        num_threads(num_threads), cutoff_size(cutoff_size), count_only(count_only), sets_max(sets_max)
     {}
 
     Hypergraph MMCSAlgorithm::transversal (const Hypergraph& H) const {
@@ -95,6 +97,10 @@ namespace agdmhs {
                                                Hypergraph::Edge& CAND,
                                                Hypergraph& crit,
                                                Hypergraph::Edge& uncov) const {
+        if (sets_max > 0 && counters.mhses_found >= sets_max) {
+            return;
+        }
+
         ++counters.iterations;
 
         // Input specification
@@ -130,6 +136,10 @@ namespace agdmhs {
 
         // Test all the vertices in C (in descending order)
         for (auto& v: Cindices) {
+            if (sets_max > 0 && counters.mhses_found >= sets_max) {
+                break;
+            }
+
             ++counters.update_loops;
             // Update uncov and crit by iterating over edges containing the vertex
             if (vertex_would_violate(crit, uncov, H, T, S, v)) {
@@ -157,7 +167,10 @@ namespace agdmhs {
                     // Spawn a new task if the queue is getting low, but
                     // don't waste time with small jobs.
                     // Each one gets its own copy of S, CAND, crit, and uncov
+                    
+                    #pragma omp atomic
                     ++counters.tasks_waiting;
+                    
                     Hypergraph::Edge new_S = S;
                     Hypergraph::Edge new_CAND = CAND;
                     Hypergraph new_crit = crit;

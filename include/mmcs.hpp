@@ -34,12 +34,13 @@ namespace agdmhs {
     };
 
     class MMCSAlgorithm: public SHDAlgorithm {
+        unsigned sets_max;
         unsigned num_threads;
         unsigned cutoff_size;
         bool count_only;
 
     public:
-        MMCSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false);
+        MMCSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false, unsigned sets_max);
         Hypergraph transversal (const Hypergraph& H) const override;
 
     private:
