@@ -168,7 +168,7 @@ namespace agdmhs {
                     // don't waste time with small jobs.
                     // Each one gets its own copy of S, CAND, crit, and uncov
                     
-                    ++counters.tasks_waiting
+                    ++counters.tasks_waiting;
                     
                     Hypergraph::Edge new_S = S;
                     Hypergraph::Edge new_CAND = CAND;
