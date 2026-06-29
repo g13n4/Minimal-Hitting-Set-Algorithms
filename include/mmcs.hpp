@@ -34,10 +34,10 @@ namespace agdmhs {
     };
 
     class MMCSAlgorithm: public SHDAlgorithm {
-        unsigned sets_max;
         unsigned num_threads;
         unsigned cutoff_size;
         bool count_only;
+        unsigned sets_max;
 
     public:
         MMCSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false, unsigned sets_max = 0);
